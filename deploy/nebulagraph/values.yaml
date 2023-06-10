@@ -1,0 +1,111 @@
+nebula:
+  version: v3.4.0
+  imagePullPolicy: Always
+  storageClassName: ""
+  enablePVReclaim: false
+  enableBR: false
+  enableForceUpdate: false
+  schedulerName: default-scheduler # nebula-scheduler
+  unsatisfiableAction: ScheduleAnyway
+  logRotate: { }
+  reference:
+    name: statefulsets.apps
+    version: v1
+  graphd:
+    image: vesoft/nebula-graphd
+    replicas: 2
+    serviceType: NodePort
+    env: []
+    config: {}
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "500Mi"
+      limits:
+        cpu: "1"
+        memory: "500Mi"
+    logStorage: "500Mi"
+    podLabels: {}
+    podAnnotations: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    readinessProbe: {}
+    initContainers: []
+    sidecarContainers: []
+    sidecarVolumes: []
+
+  metad:
+    image: vesoft/nebula-metad
+    replicas: 3
+    env: []
+    config: {}
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "500Mi"
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+    logStorage: "500Mi"
+    dataStorage: "2Gi"
+    licenseManagerURL: ""
+    license: {}
+    podLabels: {}
+    podAnnotations: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    readinessProbe: {}
+    initContainers: []
+    sidecarContainers: []
+    sidecarVolumes: []
+
+  storaged:
+    image: vesoft/nebula-storaged
+    replicas: 3
+    env: []
+    config: {}
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "500Mi"
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+    logStorage: "500Mi"
+    dataStorage: "10Gi"
+    enableAutoBalance: false
+    podLabels: {}
+    podAnnotations: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    readinessProbe: {}
+    initContainers: []
+    sidecarContainers: []
+    sidecarVolumes: []
+
+  exporter:
+    image: vesoft/nebula-stats-exporter
+    version: v3.3.0
+    replicas: 1
+    env: [ ]
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+    podLabels: { }
+    podAnnotations: { }
+    nodeSelector: { }
+    tolerations: [ ]
+    affinity: { }
+    livenessProbe: { }
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
