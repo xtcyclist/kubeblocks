@@ -2,6 +2,8 @@ apiVersion: apps.kubeblocks.io/v1alpha1
 kind: ClusterDefinition
 metadata:
   name: nebula
+  labels:
+    {{- include "nebula.labels" . | nindent 4 }}
 spec:
   connectionCredential:
     username: root

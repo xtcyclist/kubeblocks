@@ -2,6 +2,8 @@ apiVersion: apps.kubeblocks.io/v1alpha1
 kind: ClusterVersion
 metadata:
   name: nebula-{{ default .Chart.AppVersion .Values.nebula.version }}
+  labels:
+    {{- include "nebula.labels" . | nindent 4 }}
 spec:
   clusterDefinitionRef: nebula
   componentVersions:

@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "nebula-cluster.name" -}}
+{{- define "nebula.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "nebula-cluster.fullname" -}}
+{{- define "nebula.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,21 +26,21 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Expand the namespace of the chart.
 */}}
-{{- define "nebula-cluster.namespace" -}}
+{{- define "nebula.namespace" -}}
 {{ .Release.Namespace }}
 {{- end }}
 
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "nebula-cluster.chart" -}}
+{{- define "nebula.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 The ImagePullSecrets.
 */}}
-{{- define "nebula-cluster.imagePullSecrets" -}}
+{{- define "nebula.imagePullSecrets" -}}
 {{- if .Values.imagePullSecrets }}
 imagePullSecrets:
 {{- toYaml .Values.imagePullSecrets | nindent 2 }}
@@ -50,10 +50,10 @@ imagePullSecrets:
 {{/*
 Nebula cluster labels
 */}}
-{{- define "nebula-cluster.labels" -}}
+{{- define "nebula.labels" -}}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-helm.sh/chart: {{ include "nebula-cluster.chart" . }}
+helm.sh/chart: {{ include "nebula.chart" . }}
 {{- end }}
