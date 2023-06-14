@@ -34,7 +34,6 @@ nebula:
     initContainers: []
     sidecarContainers: []
     sidecarVolumes: []
-
   metad:
     image: vesoft/nebula-metad
     replicas: 3
@@ -60,7 +59,6 @@ nebula:
     initContainers: []
     sidecarContainers: []
     sidecarVolumes: []
-
   storaged:
     image: vesoft/nebula-storaged
     replicas: 3
