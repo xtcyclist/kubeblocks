@@ -43,7 +43,7 @@ spec:
           fsGroup: 1001
         containers:
           - name: nebula-metad
-            imagePullPolicy: {{default .Values.images.pullPolicy "IfNotPresent"}}
+            imagePullPolicy: {{default .Values.nebula.metad.image.pullPolicy "IfNotPresent"}}
             securityContext:
               runAsUser: 0
             livenessProbe:
@@ -129,7 +129,7 @@ spec:
           fsGroup: 1001
         containers:
           - name: nebula-storaged
-            imagePullPolicy: {{default .Values.images.pullPolicy "IfNotPresent"}}
+            imagePullPolicy: {{default .Values.nebula.storaged.image.pullPolicy "IfNotPresent"}}
             securityContext:
               runAsUser: 0
             livenessProbe:
@@ -215,7 +215,7 @@ spec:
           fsGroup: 1001
         containers:
           - name: nebula-graphd
-            imagePullPolicy: {{default .Values.images.pullPolicy "IfNotPresent"}}
+            imagePullPolicy: {{default .Values.nebula.graphd.image.pullPolicy "IfNotPresent"}}
             securityContext:
               runAsUser: 0
             livenessProbe:

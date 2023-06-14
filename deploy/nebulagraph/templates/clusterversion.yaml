@@ -11,19 +11,15 @@ spec:
       versionsContext:
         contains:
         -name: nebula-graphd
-          image: {{ .Values.images.nebula-graphd.repository }}:{{ default .Chart.AppVersion .Values.images.minio.tag }}
+          image: {{ .Values.nebula.graphd.image.repository }}:{{ default .Chart.AppVersion .Values.nebula.graphd.image.tag }}
     - componentDefRef: nebula-storaged
       versionsContext:
         contains:
         -name: nebula-storaged
-          image: {{ .Values.images.nebula-storaged.repository }}:{{ default .Chart.AppVersion .Values.images.minio.tag }}
+          image: {{ .Values.nebula.graphd.storaged.repository }}:{{ default .Chart.AppVersion .Values.nebula.storaged.image.tag }}
     - componentDefRef: nebula-metad
       versionsContext:
         contains:
         -name: nebula-metad
-          image: {{ .Values.images.nebula-metad.repository }}:{{ default .Chart.AppVersion .Values.images.minio.tag }}
-    - componentDefRef: nebula-console
-      versionsContext:
-        contains:
-        -name: nebula-console
-          image: {{ .Values.images.nebula-console.repository }}:{{ default .Chart.AppVersion .Values.images.minio.tag }}
+          image: {{ .Values.nebula.metad.image.repository }}:{{ default .Chart.AppVersion .Values.nebula.metad.image.tag }}
+

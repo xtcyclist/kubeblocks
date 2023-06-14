@@ -13,8 +13,7 @@ nebula:
     version: v1
   graphd:
     image:
-      registry: docker.io
-      repository: vesoft/nebula-graphd
+      repository: docker.io/vesoft/nebula-graphd
       tag: v3.5.0
       pullPolicy: IfNotPresent
     version: v3.5.0
@@ -39,11 +38,9 @@ nebula:
     initContainers: []
     sidecarContainers: []
     sidecarVolumes: []
-
   metad:
     image:
-      registry: docker.io
-      repository: vesoft/nebula-metad
+      repository: docker.io/vesoft/nebula-metad
       tag: v3.5.0
       pullPolicy: IfNotPresent
     version: v3.5.0
@@ -68,11 +65,9 @@ nebula:
     initContainers: []
     sidecarContainers: []
     sidecarVolumes: []
-
   storaged:
     image:
-      registry: docker.io
-      repository: vesoft/nebula-storaged
+      repository: docker.io/vesoft/nebula-storaged
       tag: v3.5.0
       pullPolicy: IfNotPresent
     version: v3.5.0
@@ -99,28 +94,6 @@ nebula:
     sidecarContainers: []
     sidecarVolumes: []
 
-  exporter:
-    image: 
-      registry: docker.io
-      repository: vesoft/nebula-stats-exporter
-      tag: v3.3.0
-      pullPolicy: IfNotPresent
-    version: v3.3.0
-    replicas: 1
-    env: [ ]
-    resources:
-      requests:
-        cpu: "100m"
-        memory: "128Mi"
-      limits:
-        cpu: "200m"
-        memory: "256Mi"
-    podLabels: { }
-    podAnnotations: { }
-    nodeSelector: { }
-    tolerations: [ ]
-    affinity: { }
-    livenessProbe: { }
 
 
 imagePullSecrets: []
