@@ -1,16 +1,14 @@
 apiVersion: apps.kubeblocks.io/v1alpha1
 kind: ClusterDefinition
 metadata:
-  name: nebulagraph
-  labels:
-    {{- include "nebulagraph.labels" . | nindent 4 }}
+  name: nebula
 spec:
   connectionCredential:
     username: root
     password: "$(RANDOM_PASSWD)"
-    endpoint: "$(SVC_FQDN):$(SVC_PORT_tcp-nebulagraph)"
+    endpoint: "$(SVC_FQDN):$(SVC_PORT_tcp-nebula)"
     host: "$(SVC_FQDN)"
-    port: "$(SVC_PORT_tcp-nebulagraph)"
+    port: "$(SVC_PORT_tcp-nebula)"
     accesskey: ""
     secretkey: ""
   componentDefs:
@@ -24,11 +22,6 @@ spec:
           scrapePath: /metrics
           scrapePort: 9187
       logConfigs:
-      # configSpecs:
-      #   - name: nebula-metad-config
-      #     templateRef: nebula-metad-config-template
-      #     volumeName: nebula-metad-config
-      #     namespace: {{.Release.Namespace}}
       service:
         ports:
           - name: tcp-nebula-metad
@@ -75,11 +68,6 @@ spec:
               timeoutSeconds: 3
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
-            # volumeMounts:
-            #   - mountPath: /nebulagraph/configs/nebula-metad.conf
-            #     name: nebula-metad-config
-            #     readOnly: true
-            #     subPath: nebula-metad.conf
             dnsPolicy: ClusterFirst
             enableServiceLinks: true
             ports:
@@ -109,11 +97,6 @@ spec:
           scrapePath: /metrics
           scrapePort: 9187
       logConfigs:
-      # configSpecs:
-      #   - name: nebula-storaged-config
-      #     templateRef: nebula-storaged-config-template
-      #     volumeName: nebula-storaged
-      #     namespace: {{.Release.Namespace}}
       service:
         ports:
           - name: tcp-nebula-storaged
@@ -160,11 +143,6 @@ spec:
               timeoutSeconds: 3
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
-            # volumeMounts:
-            #   - mountPath: /nebulagraph/configs/nebula-storaged.conf
-            #     name: nebula-storaged-config
-            #     readOnly: true
-            #     subPath: nebula-storaged.conf
             dnsPolicy: ClusterFirst
             enableServiceLinks: true
             ports:
@@ -194,11 +172,6 @@ spec:
           scrapePath: /metrics
           scrapePort: 9187
       logConfigs:
-      # configSpecs:
-      #   - name: nebula-graphd-config
-      #     templateRef: nebula-graphd-config-template
-      #     volumeName: nebula-graphd
-      #     namespace: {{.Release.Namespace}}
       service:
         ports:
           - name: tcp-nebula-graphd
@@ -245,11 +218,6 @@ spec:
               timeoutSeconds: 3
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
-            # volumeMounts:
-            #   - mountPath: /nebulagraph/configs/nebula-graphd.conf
-            #     name: nebula-graphd-config
-            #     readOnly: true
-            #     subPath: nebula-graphd.conf
             dnsPolicy: ClusterFirst
             enableServiceLinks: true
             ports:
