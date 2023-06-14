@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "milvus.name" -}}
+{{- define "nebula-cluster.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "milvus.fullname" -}}
+{{- define "nebula-cluster.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -24,39 +24,36 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+Expand the namespace of the chart.
+*/}}
+{{- define "nebula-cluster.namespace" -}}
+{{ .Release.Namespace }}
+{{- end }}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "milvus.chart" -}}
+{{- define "nebula-cluster.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Common labels
+The ImagePullSecrets.
 */}}
-{{- define "milvus.labels" -}}
-helm.sh/chart: {{ include "milvus.chart" . }}
-{{ include "milvus.selectorLabels" . }}
+{{- define "nebula-cluster.imagePullSecrets" -}}
+{{- if .Values.imagePullSecrets }}
+imagePullSecrets:
+{{- toYaml .Values.imagePullSecrets | nindent 2 }}
+{{- end }}
+{{- end }}
+
+{{/*
+Nebula cluster labels
+*/}}
+{{- define "nebula-cluster.labels" -}}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "milvus.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "milvus.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{- define "clustername" -}}
-{{ include "milvus.fullname" .}}
-{{- end}}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "milvus.serviceAccountName" -}}
-{{- default (printf "kb-%s" (include "clustername" .)) .Values.serviceAccount.name }}
+helm.sh/chart: {{ include "nebula-cluster.chart" . }}
 {{- end }}
