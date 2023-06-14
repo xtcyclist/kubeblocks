@@ -25,11 +25,11 @@ spec:
           scrapePath: /metrics
           scrapePort: 9187
       logConfigs:
-      configSpecs:
-        - name: nebula-metad-config
-          templateRef: nebula-metad-config-template
-          volumeName: nebula-metad-config
-          namespace: {{.Release.Namespace}}
+      # configSpecs:
+      #   - name: nebula-metad-config
+      #     templateRef: nebula-metad-config-template
+      #     volumeName: nebula-metad-config
+      #     namespace: {{.Release.Namespace}}
       service:
         ports:
           - name: tcp-nebula-metad
@@ -100,7 +100,6 @@ spec:
         volumes:
           - emptyDir: {}
             name: tools
-
     - name: nebula-storaged
       workloadType: Stateful
       characterType: nebula-storaged
@@ -111,11 +110,11 @@ spec:
           scrapePath: /metrics
           scrapePort: 9187
       logConfigs:
-      configSpecs:
-        - name: nebula-storaged-config
-          templateRef: nebula-storaged-config-template
-          volumeName: nebula-storaged
-          namespace: {{.Release.Namespace}}
+      # configSpecs:
+      #   - name: nebula-storaged-config
+      #     templateRef: nebula-storaged-config-template
+      #     volumeName: nebula-storaged
+      #     namespace: {{.Release.Namespace}}
       service:
         ports:
           - name: tcp-nebula-storaged
@@ -186,7 +185,6 @@ spec:
         volumes:
           - emptyDir: {}
             name: tools
-
     - name: nebula-graphd
       workloadType: Stateful
       characterType: nebula-graphd
@@ -197,11 +195,11 @@ spec:
           scrapePath: /metrics
           scrapePort: 9187
       logConfigs:
-      configSpecs:
-        - name: nebula-graphd-config
-          templateRef: nebula-graphd-config-template
-          volumeName: nebula-graphd
-          namespace: {{.Release.Namespace}}
+      # configSpecs:
+      #   - name: nebula-graphd-config
+      #     templateRef: nebula-graphd-config-template
+      #     volumeName: nebula-graphd
+      #     namespace: {{.Release.Namespace}}
       service:
         ports:
           - name: tcp-nebula-graphd

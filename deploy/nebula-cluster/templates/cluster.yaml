@@ -1,5 +1,5 @@
 apiVersion: apps.nebula-graph.io/v1alpha1
-kind: NebulaCluster
+kind: Cluster
 metadata:
   name: {{ template "nebula-cluster.name" . }}
   namespace: {{ template "nebula-cluster.namespace" . }}
@@ -193,4 +193,3 @@ spec:
   {{- if .Values.nebula.logRotate }}
   logRotate: {{ toYaml .Values.nebula.logRotate | nindent 4 }}
   {{- end }}
-

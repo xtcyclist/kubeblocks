@@ -1,0 +1,9 @@
+apiVersion: v2
+name: nebula-cluster
+description: A Nebula Graph cluster Helm chart for KubeBlocks.
+
+type: application
+
+version: 0.5.1-beta.0
+
+appVersion: "2.2.4"
