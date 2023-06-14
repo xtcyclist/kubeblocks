@@ -58,7 +58,6 @@ spec:
     resources: {{ toYaml .Values.nebula.metad.resources | nindent 6 }}
     image: {{ .Values.nebula.metad.image }}
     version: {{ .Values.nebula.version }}
-    licenseManagerURL: {{ .Values.nebula.metad.licenseManagerURL }}
     env: {{ toYaml .Values.nebula.metad.env | nindent 6 }}
     config: {{ toYaml .Values.nebula.metad.config | nindent 6 }}
     logVolumeClaim:
@@ -77,10 +76,6 @@ spec:
       {{- end }}
     labels: {{ toYaml .Values.nebula.metad.podLabels | nindent 6 }}
     annotations: {{ toYaml .Values.nebula.metad.podAnnotations | nindent 6 }}
-    {{- with .Values.nebula.metad.license }}
-    license:
-    {{- toYaml . | nindent 6 }}
-    {{- end }}
     {{- with .Values.nebula.metad.nodeSelector }}
     nodeSelector:
     {{- toYaml . | nindent 6 }}

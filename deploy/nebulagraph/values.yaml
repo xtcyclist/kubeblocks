@@ -1,6 +1,6 @@
 nebula:
-  version: v3.4.0
-  imagePullPolicy: Always
+  version: v3.5.0
+  imagePullPolicy: IfNotPresent
   storageClassName: ""
   enablePVReclaim: false
   enableBR: false
@@ -12,8 +12,13 @@ nebula:
     name: statefulsets.apps
     version: v1
   graphd:
-    image: vesoft/nebula-graphd
-    replicas: 2
+    image:
+      registry: docker.io
+      repository: vesoft/nebula-graphd
+      tag: v3.5.0
+      pullPolicy: IfNotPresent
+    version: v3.5.0
+    replicas: 1
     serviceType: NodePort
     env: []
     config: {}
@@ -36,7 +41,12 @@ nebula:
     sidecarVolumes: []
 
   metad:
-    image: vesoft/nebula-metad
+    image:
+      registry: docker.io
+      repository: vesoft/nebula-metad
+      tag: v3.5.0
+      pullPolicy: IfNotPresent
+    version: v3.5.0
     replicas: 3
     env: []
     config: {}
@@ -49,8 +59,6 @@ nebula:
         memory: "1Gi"
     logStorage: "500Mi"
     dataStorage: "2Gi"
-    licenseManagerURL: ""
-    license: {}
     podLabels: {}
     podAnnotations: {}
     nodeSelector: {}
@@ -62,7 +70,12 @@ nebula:
     sidecarVolumes: []
 
   storaged:
-    image: vesoft/nebula-storaged
+    image:
+      registry: docker.io
+      repository: vesoft/nebula-storaged
+      tag: v3.5.0
+      pullPolicy: IfNotPresent
+    version: v3.5.0
     replicas: 3
     env: []
     config: {}
@@ -87,7 +100,11 @@ nebula:
     sidecarVolumes: []
 
   exporter:
-    image: vesoft/nebula-stats-exporter
+    image: 
+      registry: docker.io
+      repository: vesoft/nebula-stats-exporter
+      tag: v3.3.0
+      pullPolicy: IfNotPresent
     version: v3.3.0
     replicas: 1
     env: [ ]
