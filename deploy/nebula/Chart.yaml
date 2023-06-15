@@ -1,15 +1,13 @@
 apiVersion: v2
 name: nebula
 description: Nebula Cluster Helm chart for Kubernetes
-version: 0.1.0
-appVersion: 1.0.0
+version: 0.5.1-beta.0
+appVersion: "v3.5.0"
 home: https://nebula-graph.io
 sources:
 - https://github.com/vesoft-inc/nebula
-- https://github.com/vesoft-inc/nebula-operator
 keywords:
   - kubernetes
-  - operator
   - nebula-graph
   - database
   - graph database

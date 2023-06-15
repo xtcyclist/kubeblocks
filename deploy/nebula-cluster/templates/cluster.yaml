@@ -7,6 +7,7 @@ metadata:
 spec:
   clusterDefinitionRef: nebula
   clusterVersionRef: nebula-{{ default .Chart.AppVersion .Values.clusterVersionOverride }}
+  terminationPolicy: {{ .Values.terminationPolicy }}
   componentSpecs:
     - name: nebula-graphd
       componentDefRef: nebula-graphd

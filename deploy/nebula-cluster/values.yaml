@@ -1,3 +1,4 @@
+terminationPolicy: Delete
 nebula:
   version: v3.5.0
   imagePullPolicy: Always

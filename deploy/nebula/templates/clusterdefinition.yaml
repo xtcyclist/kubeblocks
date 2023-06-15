@@ -26,9 +26,9 @@ spec:
       logConfigs:
       service:
         ports:
-          - name: tcp-nebula-metad
+          - name: tcp-metad
             port: 9559
-            targetPort: tcp-nebula-metad
+            targetPort: tcp-metad
       volumeTypes:
         - name: data
           type: data
@@ -73,7 +73,7 @@ spec:
             dnsPolicy: ClusterFirst
             enableServiceLinks: true
             ports:
-              - name: tcp-nebula-metad
+              - name: tcp-metad
                 containerPort: 9559
               - name: tcp-metrics
                 containerPort: 9091
@@ -101,9 +101,9 @@ spec:
       logConfigs:
       service:
         ports:
-          - name: tcp-nebula-storaged
+          - name: tcp-storaged
             port: 9669
-            targetPort: tcp-nebula-storaged
+            targetPort: tcp-storaged
       volumeTypes:
         - name: data
           type: data
@@ -148,7 +148,7 @@ spec:
             dnsPolicy: ClusterFirst
             enableServiceLinks: true
             ports:
-              - name: tcp-nebula-storaged
+              - name: tcp-storaged
                 containerPort: 9669
               - name: tcp-metrics
                 containerPort: 9091
@@ -176,9 +176,9 @@ spec:
       logConfigs:
       service:
         ports:
-          - name: tcp-nebula-graphd
+          - name: tcp-graphd
             port: 9779
-            targetPort: tcp-nebula-graphd
+            targetPort: tcp-graphd
       volumeTypes:
         - name: data
           type: data
@@ -223,7 +223,7 @@ spec:
             dnsPolicy: ClusterFirst
             enableServiceLinks: true
             ports:
-              - name: tcp-nebula-metad
+              - name: tcp-metad
                 containerPort: 9779
               - name: tcp-metrics
                 containerPort: 9091
