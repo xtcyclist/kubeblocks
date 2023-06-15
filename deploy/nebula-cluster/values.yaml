@@ -13,7 +13,7 @@ nebula:
     name: statefulsets.apps
     version: v1
   graphd:
-    image: vesoft/nebula-graphd
+    image: docker.io/vesoft/nebula-graphd:v3.5.0
     replicas: 2
     serviceType: NodePort
     env: []
@@ -36,7 +36,7 @@ nebula:
     sidecarContainers: []
     sidecarVolumes: []
   metad:
-    image: vesoft/nebula-metad
+    image: docker.io/vesoft/nebula-metad:v3.5.0
     replicas: 3
     env: []
     config: {}
@@ -61,7 +61,7 @@ nebula:
     sidecarContainers: []
     sidecarVolumes: []
   storaged:
-    image: vesoft/nebula-storaged
+    image: docker.io/vesoft/nebula-storaged:v3.5.0
     replicas: 3
     env: []
     config: {}
@@ -84,25 +84,6 @@ nebula:
     initContainers: []
     sidecarContainers: []
     sidecarVolumes: []
-
-  exporter:
-    image: vesoft/nebula-stats-exporter
-    version: v3.3.0
-    replicas: 1
-    env: [ ]
-    resources:
-      requests:
-        cpu: "100m"
-        memory: "128Mi"
-      limits:
-        cpu: "200m"
-        memory: "256Mi"
-    podLabels: { }
-    podAnnotations: { }
-    nodeSelector: { }
-    tolerations: [ ]
-    affinity: { }
-    livenessProbe: { }
 
 
 imagePullSecrets: []
