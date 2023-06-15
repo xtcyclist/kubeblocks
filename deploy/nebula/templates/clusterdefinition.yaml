@@ -18,21 +18,14 @@ spec:
       configSpecs:
         - name: nebula-metad-config
           templateRef: nebula-metad-config-template
-          volumnName: conf
+          volumeName: conf
       scriptSpecs:
         - name: nebula-metad-scripts
-          templateRef: nebula-graphd-scripts-template
+          templateRef: nebula-metad-scripts-template
           volumeName: scripts
           defaultMode: 493
       workloadType: Stateful
       characterType: nebula-metad
-      probes:
-      monitor:
-        builtIn: false
-        exporterConfig:
-          scrapePath: /metrics
-          scrapePort: 9187
-      logConfigs:
       service:
         ports:
           - name: tcp-metad
@@ -55,7 +48,12 @@ spec:
                 mountPath: /conf
               - name: scripts
                 mountPath: /scripts
-            command: ["/scripts/nebula-metad-start.sh"]
+            command:
+              - /bin/bash
+              - -c
+              - |
+                set -ex
+                /scripts/nebula-metad-start.sh
             imagePullPolicy: {{default .Values.nebula.metad.image.pullPolicy "IfNotPresent"}}
             securityContext:
               runAsUser: 0
@@ -87,10 +85,6 @@ spec:
               periodSeconds: 10
               successThreshold: 1
               timeoutSeconds: 3
-            terminationMessagePath: /dev/termination-log
-            terminationMessagePolicy: File
-            dnsPolicy: ClusterFirst
-            enableServiceLinks: true
             ports:
               - name: tcp-metad
                 containerPort: 9559
@@ -107,12 +101,12 @@ spec:
         terminationGracePeriodSeconds: 300
         volumes:
           - emptyDir: {}
-            name: tools
+            name: log
     - name: nebula-storaged
       configSpecs:
         - name: nebula-storaged-config
           templateRef: nebula-storaged-config-template
-          volumnName: conf
+          volumeName: conf
       scriptSpecs:
         - name: nebula-storaged-scripts
           templateRef: nebula-storaged-scripts-template
@@ -120,13 +114,6 @@ spec:
           defaultMode: 493
       workloadType: Stateful
       characterType: nebula-storaged
-      probes:
-      monitor:
-        builtIn: false
-        exporterConfig:
-          scrapePath: /metrics
-          scrapePort: 9187
-      logConfigs:
       service:
         ports:
           - name: tcp-storaged
@@ -138,8 +125,6 @@ spec:
       podSpec:
         securityContext:
           fsGroup: 1001
-        dnsPolicy: ClusterFirst
-        enableServiceLinks: true
         containers:
           - name: nebula-storaged
             volumeMounts:
@@ -151,7 +136,12 @@ spec:
                 mountPath: /scripts
               - name: log
                 mountPath: /log
-            command: ["/scripts/nebula-storaged-start.sh"]
+            command:
+              - /bin/bash
+              - -c
+              - |
+                set -ex
+                /scripts/nebula-storaged-start.sh
             imagePullPolicy: {{default .Values.nebula.storaged.image.pullPolicy "IfNotPresent"}}
             securityContext:
               runAsUser: 0
@@ -185,8 +175,6 @@ spec:
               timeoutSeconds: 3
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
-            dnsPolicy: ClusterFirst
-            enableServiceLinks: true
             ports:
               - name: tcp-storaged
                 containerPort: 9669
@@ -203,12 +191,12 @@ spec:
         terminationGracePeriodSeconds: 300
         volumes:
           - emptyDir: {}
-            name: tools
+            name: log
     - name: nebula-graphd
       configSpecs:
         - name: nebula-graphd-config
           templateRef: nebula-graphd-config-template
-          volumnName: conf
+          volumeName: conf
       scriptSpecs:
         - name: nebula-graphd-scripts
           templateRef: nebula-graphd-scripts-template
@@ -216,13 +204,6 @@ spec:
           defaultMode: 493
       workloadType: Stateful
       characterType: nebula-graphd
-      probes:
-      monitor:
-        builtIn: false
-        exporterConfig:
-          scrapePath: /metrics
-          scrapePort: 9187
-      logConfigs:
       service:
         ports:
           - name: tcp-graphd
@@ -232,8 +213,6 @@ spec:
         - name: data
           type: data
       podSpec:
-        dnsPolicy: ClusterFirst
-        enableServiceLinks: true
         securityContext:
           fsGroup: 1001
         containers:
@@ -246,7 +225,14 @@ spec:
                 mountPath: /scripts
               - name: log
                 mountPath: /log
-            command: ["/scripts/nebula-graphd-start.sh"]
+              - name: data
+                mountPath: /data
+            command:
+              - /bin/bash
+              - -c
+              - |
+                set -ex
+                /scripts/nebula-graphd-start.sh
             imagePullPolicy: {{default .Values.nebula.graphd.image.pullPolicy "IfNotPresent"}}
             securityContext:
               runAsUser: 0
@@ -278,8 +264,6 @@ spec:
               periodSeconds: 10
               successThreshold: 1
               timeoutSeconds: 3
-            terminationMessagePath: /dev/termination-log
-            terminationMessagePolicy: File
             ports:
               - name: tcp-metad
                 containerPort: 9779
@@ -296,4 +280,4 @@ spec:
         terminationGracePeriodSeconds: 300
         volumes:
           - emptyDir: {}
-            name: tools
+            name: log
