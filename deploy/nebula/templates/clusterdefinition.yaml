@@ -18,7 +18,9 @@ spec:
       configSpecs:
         - name: nebula-metad-config
           templateRef: nebula-metad-config-template
-          volumnName: conf
+          constraintRef: nebula-metad-constraints
+          namespace: {{ .Release.Namespace }}
+          volumeName: conf
       scriptSpecs:
         - name: nebula-metad-scripts
           templateRef: nebula-graphd-scripts-template
@@ -44,6 +46,8 @@ spec:
       podSpec:
         securityContext:
           fsGroup: 1001
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
         containers:
           - name: nebula-metad
             volumeMounts:
@@ -89,8 +93,6 @@ spec:
               timeoutSeconds: 3
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
-            dnsPolicy: ClusterFirst
-            enableServiceLinks: true
             ports:
               - name: tcp-metad
                 containerPort: 9559
@@ -112,7 +114,9 @@ spec:
       configSpecs:
         - name: nebula-storaged-config
           templateRef: nebula-storaged-config-template
-          volumnName: conf
+          constraintRef: nebula-metad-constraints
+          namespace: {{ .Release.Namespace }}
+          volumeName: conf
       scriptSpecs:
         - name: nebula-storaged-scripts
           templateRef: nebula-storaged-scripts-template
@@ -185,8 +189,6 @@ spec:
               timeoutSeconds: 3
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
-            dnsPolicy: ClusterFirst
-            enableServiceLinks: true
             ports:
               - name: tcp-storaged
                 containerPort: 9669
@@ -208,7 +210,9 @@ spec:
       configSpecs:
         - name: nebula-graphd-config
           templateRef: nebula-graphd-config-template
-          volumnName: conf
+          constraintRef: nebula-metad-constraints
+          namespace: {{ .Release.Namespace }}
+          volumeName: conf
       scriptSpecs:
         - name: nebula-graphd-scripts
           templateRef: nebula-graphd-scripts-template
