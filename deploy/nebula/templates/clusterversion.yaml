@@ -9,16 +9,16 @@ spec:
   componentVersions:
     - componentDefRef: nebula-graphd
       versionsContext:
-        contains:
+        containers:
         - name: nebula-graphd
           image: {{ .Values.nebula.graphd.image.repository }}:{{ default .Chart.AppVersion .Values.nebula.graphd.image.tag }}
     - componentDefRef: nebula-storaged
       versionsContext:
-        contains:
+        containers:
         - name: nebula-storaged
           image: {{ .Values.nebula.storaged.image.repository }}:{{ default .Chart.AppVersion .Values.nebula.storaged.image.tag }}
     - componentDefRef: nebula-metad
       versionsContext:
-        contains:
+        containers:
         - name: nebula-metad
           image: {{ .Values.nebula.metad.image.repository }}:{{ default .Chart.AppVersion .Values.nebula.metad.image.tag }}
