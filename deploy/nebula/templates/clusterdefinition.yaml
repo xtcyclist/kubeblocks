@@ -23,7 +23,7 @@ spec:
           volumeName: conf
       scriptSpecs:
         - name: nebula-metad-scripts
-          templateRef: nebula-graphd-scripts-template
+          templateRef: nebula-metad-scripts-template
           volumeName: scripts
           defaultMode: 493
       workloadType: Stateful
@@ -114,7 +114,7 @@ spec:
       configSpecs:
         - name: nebula-storaged-config
           templateRef: nebula-storaged-config-template
-          constraintRef: nebula-metad-constraints
+          constraintRef: nebula-storaged-constraints
           namespace: {{ .Release.Namespace }}
           volumeName: conf
       scriptSpecs:
@@ -210,7 +210,7 @@ spec:
       configSpecs:
         - name: nebula-graphd-config
           templateRef: nebula-graphd-config-template
-          constraintRef: nebula-metad-constraints
+          constraintRef: nebula-graphd-constraints
           namespace: {{ .Release.Namespace }}
           volumeName: conf
       scriptSpecs:
