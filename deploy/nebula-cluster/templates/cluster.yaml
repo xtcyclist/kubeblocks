@@ -26,23 +26,7 @@ spec:
         {{- end }}
       {{- end }}
       volumeClaimTemplates:
-        - name: log # ref clusterdefinition components.containers.volumeMounts.name
-          spec:
-            storageClassName: {{ .Values.nebula.storageClassName }}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: {{ .Values.nebula.metad.dataStorage }}
-        - name: conf # ref clusterdefinition components.containers.volumeMounts.name
-          spec:
-            storageClassName: {{ .Values.nebula.storageClassName }}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: {{ .Values.nebula.metad.dataStorage }}
-        - name: scripts # ref clusterdefinition components.containers.volumeMounts.name
+        - name: data # ref clusterdefinition components.containers.volumeMounts.name
           spec:
             storageClassName: {{ .Values.nebula.storageClassName }}
             accessModes:
@@ -75,30 +59,6 @@ spec:
             resources:
               requests:
                 storage: {{ .Values.nebula.metad.dataStorage }}
-        - name: log # ref clusterdefinition components.containers.volumeMounts.name
-          spec:
-            storageClassName: {{ .Values.nebula.storageClassName }}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: {{ .Values.nebula.metad.dataStorage }}
-        - name: conf # ref clusterdefinition components.containers.volumeMounts.name
-          spec:
-            storageClassName: {{ .Values.nebula.storageClassName }}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: {{ .Values.nebula.metad.dataStorage }}
-        - name: scripts # ref clusterdefinition components.containers.volumeMounts.name
-          spec:
-            storageClassName: {{ .Values.nebula.storageClassName }}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: {{ .Values.nebula.metad.dataStorage }}
     - name: nebula-storaged
       componentDefRef: nebula-storaged
       replicas: {{ .Values.nebula.storaged.replicas }}
@@ -124,27 +84,3 @@ spec:
             resources:
               requests:
                 storage: {{ .Values.nebula.storaged.dataStorage }}
-        - name: log # ref clusterdefinition components.containers.volumeMounts.name
-          spec:
-            storageClassName: {{ .Values.nebula.storageClassName }}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: {{ .Values.nebula.metad.dataStorage }}
-        - name: conf # ref clusterdefinition components.containers.volumeMounts.name
-          spec:
-            storageClassName: {{ .Values.nebula.storageClassName }}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: {{ .Values.nebula.metad.dataStorage }}
-        - name: scripts # ref clusterdefinition components.containers.volumeMounts.name
-          spec:
-            storageClassName: {{ .Values.nebula.storageClassName }}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: {{ .Values.nebula.metad.dataStorage }}
