@@ -14,7 +14,7 @@ nebula:
     version: v1
   graphd:
     image: docker.io/vesoft/nebula-graphd:v3.5.0
-    replicas: 2
+    replicas: 1
     serviceType: NodePort
     env: []
     config: {}
@@ -62,7 +62,7 @@ nebula:
     sidecarVolumes: []
   storaged:
     image: docker.io/vesoft/nebula-storaged:v3.5.0
-    replicas: 3
+    replicas: 1
     env: []
     config: {}
     resources:
