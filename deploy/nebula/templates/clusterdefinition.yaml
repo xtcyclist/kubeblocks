@@ -32,8 +32,6 @@ spec:
             port: 9779
             targetPort: tcp-graphd
       podSpec:
-        securityContext:
-          fsGroup: 1001
         containers:
           - name: nebula-graphd
             imagePullPolicy: IfNotPresent
