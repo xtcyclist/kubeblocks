@@ -37,6 +37,8 @@ spec:
       podSpec:
         securityContext:
           fsGroup: 1001
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
         containers:
           - name: nebula-metad
             volumeMounts:
