@@ -7,11 +7,14 @@ set -ex
 {{- $metad_port := 9559 }}
 {{- $storaged_port := 9779 }}
 {{- $nebula_metad_component := fromJson "{}" }}
+{{- $nebula_storaged_component := fromJson "{}" }}
 {{- range $i, $e := $.cluster.spec.componentSpecs }}
     {{- if eq $e.componentDefRef "nebula-metad" }}
         {{- $nebula_metad_component = $e }}
+    {{- else if eq $e.componentDefRef "nebula-storaged" }}
+        {{- $nebula_storaged_component = $e }}
     {{- end }}
 {{- end }}
-{{- $metad_pod = printf "%s-%s-%d.%s-%s-headless.%s.svc" $clusterName $nebula_metad_component.name 0 $clusterName $nebula_metad_component.name $namespace }}
-
-exec /usr/local/nebula/bin/nebula-storaged --flagfile /conf/nebula-storaged.conf --log_dir=/log --pid_file=/data/nebula-storaged.pid --port={{ $storaged_port }} --ws_http_port=12778 --data_path=/data/storaged --heartbeat_interval_secs=1 --expired_time_factor=60 --v=4 --local_config=false --raft_heartbeat_interval_secs=30 --skip_wait_in_rate_limiter=true --enable_ssl=false --enable_graph_ssl=false --enable_meta_ssl=false --containerized=false --meta_server_addrs={{$metad_pod}}:{{ $metad_port }}
+{{- $metad_pod = printf "%s-%s-%d.%s-%s-headless.%s.svc.cluster.local" $clusterName $nebula_metad_component.name 0 $clusterName $nebula_metad_component.name $namespace }}
+{{- $svc_suffix := printf "%s-%s-headless.%s.svc.cluster.local" $clusterName $nebula_storaged_component.name $namespace }}
+exec /usr/local/nebula/bin/nebula-storaged --flagfile=/usr/local/nebula/etc/nebula-storaged.conf --meta_server_addrs={{ $metad_pod }}:{{$metad_port}} --local_ip=$(hostname).{{$svc_suffix}} --ws_ip=$(hostname).{{$svc_suffix}} --daemonize=false

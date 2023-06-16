@@ -14,6 +14,66 @@ spec:
     accesskey: ""
     secretkey: ""
   componentDefs:
+    - name: nebula-graphd
+      configSpecs:
+        - name: nebula-graphd-config
+          templateRef: nebula-graphd-config-template
+          volumeName: nebula-graphd
+      scriptSpecs:
+        - name: nebula-graphd-scripts
+          templateRef: nebula-graphd-scripts-template
+          volumeName: scripts
+          defaultMode: 493
+      workloadType: Stateful
+      characterType: nebula-graphd
+      service:
+        ports:
+          - name: tcp-graphd
+            port: 9779
+            targetPort: tcp-graphd
+      podSpec:
+        containers:
+          - name: nebula-graphd
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+              - mountPath: /usr/local/nebula/data
+                name: data
+              - mountPath: /usr/local/nebula/logs
+                name: logs
+              - mountPath: /usr/local/nebula/etc
+                name: nebula-graphd
+              - name: scripts
+                mountPath: /scripts
+            command:
+              - /bin/bash
+              - -c
+              - |
+                set -ex
+                /scripts/nebula-graphd-start.sh
+            imagePullPolicy: {{default .Values.nebula.graphd.image.pullPolicy "IfNotPresent"}}
+            ports:
+            - containerPort: 9669
+              name: thrift
+              protocol: TCP
+            - containerPort: 19669
+              name: http
+              protocol: TCP
+            - containerPort: 19670
+              name: http2
+              protocol: TCP
+            readinessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: /status
+                port: 19669
+                scheme: HTTP
+              initialDelaySeconds: 10
+              periodSeconds: 10
+              successThreshold: 1
+              timeoutSeconds: 5
+        volumes:
+          - emptyDir: {}
+            name: logs
     - name: nebula-metad
       configSpecs:
         - name: nebula-metad-config
@@ -26,11 +86,6 @@ spec:
           defaultMode: 493
       workloadType: Stateful
       characterType: nebula-metad
-      # service:
-      #   ports:
-      #     - name: tcp-metad
-      #       port: 9559
-      #       targetPort: tcp-metad
       podSpec:
         containers:
           - name: nebula-metad
@@ -77,7 +132,7 @@ spec:
       configSpecs:
         - name: nebula-storaged-config
           templateRef: nebula-storaged-config-template
-          volumeName: conf
+          volumeName: nebula-storaged
       scriptSpecs:
         - name: nebula-storaged-scripts
           templateRef: nebula-storaged-scripts-template
@@ -85,11 +140,6 @@ spec:
           defaultMode: 493
       workloadType: Stateful
       characterType: nebula-storaged
-      service:
-        ports:
-          - name: tcp-storaged
-            port: 9669
-            targetPort: tcp-storaged
       volumeTypes:
         - name: data
           type: data
@@ -98,15 +148,6 @@ spec:
           fsGroup: 1001
         containers:
           - name: nebula-storaged
-            volumeMounts:
-              - name: data
-                mountPath: /data
-              - name: conf
-                mountPath: /conf
-              - name: scripts
-                mountPath: /scripts
-              - name: log
-                mountPath: /log
             command:
               - /bin/bash
               - -c
@@ -114,141 +155,35 @@ spec:
                 set -ex
                 /scripts/nebula-storaged-start.sh
             imagePullPolicy: {{default .Values.nebula.storaged.image.pullPolicy "IfNotPresent"}}
-            securityContext:
-              runAsUser: 0
-            livenessProbe:
+            ports:
+            - containerPort: 9779
+              name: thrift
+              protocol: TCP
+            - containerPort: 19779
+              name: http
+              protocol: TCP
+            - containerPort: 19780
+              name: http2
+              protocol: TCP
+            - containerPort: 9778
+              name: admin
+              protocol: TCP
+            readinessProbe:
               failureThreshold: 3
               httpGet:
-                path: /healthz
-                port: 9091
+                path: /status
+                port: 19779
                 scheme: HTTP
-              periodSeconds: 15
-              successThreshold: 1
-              timeoutSeconds: 10
-            readinessProbe:
-              failureThreshold: 2
-              httpGet:
-                path: /healthz
-                port: 9091
-                scheme: HTTP
-              initialDelaySeconds: 5
-              periodSeconds: 15
-              successThreshold: 1
-              timeoutSeconds: 3
-            startupProbe:
-              failureThreshold: 18
-              httpGet:
-                path: /healthz
-                port: 9091
-                scheme: HTTP
+              initialDelaySeconds: 10
               periodSeconds: 10
               successThreshold: 1
-              timeoutSeconds: 3
-            terminationMessagePath: /dev/termination-log
-            terminationMessagePolicy: File
-            ports:
-              - name: tcp-storaged
-                containerPort: 9669
-              - name: tcp-metrics
-                containerPort: 9091
-            args:
-            env:
-              - name: CACHE_SIZE
-                valueFrom:
-                  resourceFieldRef:
-                    divisor: 1Gi
-                    resource: limits.memory
-        serviceAccountName: default
-        terminationGracePeriodSeconds: 300
-        volumes:
-          - emptyDir: {}
-            name: log
-    - name: nebula-graphd
-      configSpecs:
-        - name: nebula-graphd-config
-          templateRef: nebula-graphd-config-template
-          volumeName: conf
-      scriptSpecs:
-        - name: nebula-graphd-scripts
-          templateRef: nebula-graphd-scripts-template
-          volumeName: scripts
-          defaultMode: 493
-      workloadType: Stateful
-      characterType: nebula-graphd
-      service:
-        ports:
-          - name: tcp-graphd
-            port: 9779
-            targetPort: tcp-graphd
-      volumeTypes:
-        - name: data
-          type: data
-      podSpec:
-        securityContext:
-          fsGroup: 1001
-        containers:
-          - name: nebula-graphd
-            imagePullPolicy: IfNotPresent
+              timeoutSeconds: 5
             volumeMounts:
-              - name: conf
-                mountPath: /conf
               - name: scripts
                 mountPath: /scripts
-              - name: log
-                mountPath: /log
-              - name: data
-                mountPath: /data
-            command:
-              - /bin/bash
-              - -c
-              - |
-                set -ex
-                /scripts/nebula-graphd-start.sh
-            imagePullPolicy: {{default .Values.nebula.graphd.image.pullPolicy "IfNotPresent"}}
-            securityContext:
-              runAsUser: 0
-            livenessProbe:
-              failureThreshold: 3
-              httpGet:
-                path: /healthz
-                port: 9091
-                scheme: HTTP
-              periodSeconds: 15
-              successThreshold: 1
-              timeoutSeconds: 10
-            readinessProbe:
-              failureThreshold: 2
-              httpGet:
-                path: /healthz
-                port: 9091
-                scheme: HTTP
-              initialDelaySeconds: 5
-              periodSeconds: 15
-              successThreshold: 1
-              timeoutSeconds: 3
-            startupProbe:
-              failureThreshold: 18
-              httpGet:
-                path: /healthz
-                port: 9091
-                scheme: HTTP
-              periodSeconds: 10
-              successThreshold: 1
-              timeoutSeconds: 3
-            ports:
-              - name: tcp-metad
-                containerPort: 9779
-              - name: tcp-metrics
-                containerPort: 9091
-            args:
-            env:
-              - name: CACHE_SIZE
-                valueFrom:
-                  resourceFieldRef:
-                    divisor: 1Gi
-                    resource: limits.memory
-        serviceAccountName: default
-        terminationGracePeriodSeconds: 300
-        volumes:
-          - emptyDir: {}
-            name: log
+              - mountPath: /usr/local/nebula/etc
+                name: nebula-storaged
+              - mountPath: /usr/local/nebula/data
+                name: data
+              - mountPath: /usr/local/nebula/logs
+                name: logs

@@ -46,8 +46,10 @@
 --raft_heartbeat_interval_secs=30
 # RPC timeout for raft client (ms)
 --raft_rpc_timeout_ms=500
-## recycle Raft WAL
+# recycle Raft WAL
 --wal_ttl=14400
+# whether send raft snapshot by files via http
+--snapshot_send_files=true
 
 ########## Disk ##########
 # Root data path. Split by comma. e.g. --data_path=/disk1/path1/,/disk2/path2/
@@ -62,7 +64,10 @@
 # The default block cache size used in BlockBasedTable.
 # The unit is MB.
 --rocksdb_block_cache=4
-# The type of storage engine, `rocksdb', `memory', etc.
+# Disable page cache to better control memory used by rocksdb.
+# Caution: Make sure to allocate enough block cache if disabling page cache!
+--disable_page_cache=false
+# The type of storage engine, rocksdb, memory, etc.
 --engine_type=rocksdb
 
 # Compression algorithm, options: no,snappy,lz4,lz4hc,zlib,bzip2,zstd
@@ -103,6 +108,29 @@
 # rocksdb BlockBasedTableOptions in json, each name and value of option is string, given as "option_name":"option_value" separated by comma
 --rocksdb_block_based_table_options={"block_size":"8192"}
 
+############## storage cache ##############
+# Whether to enable storage cache
+--enable_storage_cache=false
+# Total capacity reserved for storage in memory cache in MB
+--storage_cache_capacity=0
+# Estimated number of cache entries on this storage node in base 2 logarithm. E.g., in case of 20, the estimated number of entries will be 2^20.
+# A good estimate can be log2(#vertices on this storage node). The maximum allowed is 31.
+--storage_cache_entries_power=20
+
+# Whether to add vertex pool in cache. Only valid when storage cache is enabled.
+--enable_vertex_pool=false
+# Vertex pool size in MB
+--vertex_pool_capacity=50
+# TTL in seconds for vertex items in the cache
+--vertex_item_ttl=300
+
+# Whether to add negative pool in cache. Only valid when storage cache is enabled.
+--enable_negative_pool=false
+# Negative pool size in MB
+--negative_pool_capacity=50
+# TTL in seconds for negative items in the cache
+--negative_item_ttl=300
+
 ############### misc ####################
 # Whether turn on query in multiple thread
 --query_concurrently=true
@@ -110,9 +138,6 @@
 --auto_remove_invalid_space=true
 # Network IO threads number
 --num_io_threads=16
-# Max active connections for all networking threads. 0 means no limit.
-# Max connections for each networking thread = num_max_connections / num_netio_threads
---num_max_connections=0
 # Worker threads number to handle request
 --num_worker_threads=32
 # Maximum subtasks to run admin jobs concurrently
@@ -125,6 +150,28 @@
 --rebuild_index_part_rate_limit=4194304
 # The amount of data sent in each batch when leader synchronizes rebuilding index
 --rebuild_index_batch_size=1048576
+
+############## non-volatile cache ##############
+# Cache file location
+--nv_cache_path=/tmp/cache
+# Cache file size in MB
+--nv_cache_size=0
+# DRAM part size of non-volatile cache in MB
+--nv_dram_size=50
+# DRAM part bucket power. The value is a logarithm with a base of 2. Optional values are 0-32.
+--nv_bucket_power=20
+# DRAM part lock power. The value is a logarithm with a base of 2. The recommended value is max(1, nv_bucket_power - 10).
+--nv_lock_power=10
+
+########## Black box ########
+# Enable black box
+--ng_black_box_switch=true
+# Black box log folder
+--ng_black_box_home=black_box
+# Black box dump metrics log period
+--ng_black_box_dump_period_seconds=5
+# Black box log files expire time
+--ng_black_box_file_lifetime_seconds=1800
 
 ########## memory tracker ##########
 # trackable memory ratio (trackable_memory / (total_memory - untracked_reserved_memory) )

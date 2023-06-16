@@ -9,10 +9,10 @@ spec:
   clusterVersionRef: nebula-{{ default .Chart.AppVersion .Values.clusterVersionOverride }}
   terminationPolicy: {{ .Values.terminationPolicy }}
   componentSpecs:
-    - name: nebula-graphd
-      componentDefRef: nebula-graphd
-      replicas: {{ .Values.nebula.graphd.replicas }}
-      {{- with  .Values.nebula.graphd.resources }}
+    - name: nebula-metad
+      componentDefRef: nebula-metad
+      replicas: {{ .Values.nebula.metad.replicas }}
+      {{- with  .Values.nebula.metad.resources }}
       resources:
         {{- with .limits }}
         limits:
@@ -34,10 +34,10 @@ spec:
             resources:
               requests:
                 storage: {{ .Values.nebula.metad.dataStorage }}
-    - name: nebula-metad
-      componentDefRef: nebula-metad
-      replicas: {{ .Values.nebula.metad.replicas }}
-      {{- with  .Values.nebula.metad.resources }}
+    - name: nebula-graphd
+      componentDefRef: nebula-graphd
+      replicas: {{ .Values.nebula.graphd.replicas }}
+      {{- with  .Values.nebula.graphd.resources }}
       resources:
         {{- with .limits }}
         limits:
