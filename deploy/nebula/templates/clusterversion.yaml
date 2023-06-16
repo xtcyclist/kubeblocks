@@ -7,11 +7,11 @@ metadata:
 spec:
   clusterDefinitionRef: nebula
   componentVersions:
-    # - componentDefRef: nebula-graphd
-    #   versionsContext:
-    #     containers:
-    #     - name: nebula-graphd
-    #       image: {{ .Values.nebula.graphd.image.repository }}:{{ default .Chart.AppVersion .Values.nebula.graphd.image.tag }}
+    - componentDefRef: nebula-graphd
+      versionsContext:
+        containers:
+        - name: nebula-graphd
+          image: {{ .Values.nebula.graphd.image.repository }}:{{ default .Chart.AppVersion .Values.nebula.graphd.image.tag }}
     - componentDefRef: nebula-storaged
       versionsContext:
         containers:

@@ -28,8 +28,9 @@
 --stderr_log_file=graphd-stderr.log
 # Copy log messages at or above this level to stderr in addition to logfiles. The numbers of severity levels INFO, WARNING, ERROR, and FATAL are 0, 1, 2, and 3, respectively.
 --stderrthreshold=3
-# wether logging files' name contain time stamp.
+# wether logging files' name contain timestamp.
 --timestamp_in_logfile_name=true
+
 ########## query ##########
 # Whether to treat partial success as an error.
 # This flag is only used for Read-only access, and Modify access always treats partial success as an error.
@@ -61,9 +62,6 @@
 --num_accept_threads=1
 # The number of networking IO threads, 0 for # of CPU cores
 --num_netio_threads=0
-# Max active connections for all networking threads. 0 means no limit.
-# Max connections for each networking thread = num_max_connections / num_netio_threads
---num_max_connections=0
 # The number of threads to execute user queries, 0 for # of CPU cores
 --num_worker_threads=0
 # HTTP service ip
@@ -72,6 +70,10 @@
 --ws_http_port=19669
 # storage client timeout
 --storage_client_timeout_ms=60000
+# Enable slow query records
+--enable_record_slow_query=true
+# The number of slow query records
+--slow_query_limit=100
 # slow query threshold in us
 --slow_query_threshold_us=200000
 # Port to listen on Meta with HTTP protocol, it corresponds to ws_http_port in metad's configuration file
@@ -87,6 +89,51 @@
 # System memory high watermark ratio, cancel the memory checking when the ratio greater than 1.0
 --system_memory_high_watermark_ratio=0.8
 
+########## audit ##########
+# This variable is used to enable audit. The value can be 'true' or 'false'.
+--enable_audit=false
+# This variable is used to configure where the audit log will be written. Optional：[ file | es ]
+# If it is set to 'file', the log will be written into a file specified by audit_log_file variable.
+# If it is set to 'es', the audit log will be written to Elasticsearch.
+--audit_log_handler=file
+# This variable is used to specify the filename that’s going to store the audit log.
+# It can contain the path relative to the install dir or absolute path.
+# This variable has effect only when audit_log_handler is set to 'file'.
+--audit_log_file=./logs/audit/audit.log
+# This variable is used to specify the audit log strategy, Optional：[ asynchronous｜ synchronous ]
+# asynchronous: log using memory buffer, do not block the main thread
+# synchronous: log directly to file, flush and sync every event
+# Caution: For performance reasons, when the buffer is full and has not been flushed to the disk,
+# the 'asynchronous' mode will discard subsequent requests.
+# This variable has effect only when audit_log_handler is set to 'file'.
+--audit_log_strategy=synchronous
+# This variable can be used to specify the size of memory buffer used for logging,
+# used when audit_log_strategy variable is set to 'asynchronous' values.
+# This variable has effect only when audit_log_handler is set to 'file'. Uint: B
+--audit_log_max_buffer_size=1048576
+# This variable is used to specify the audit log format. Supports three log formats [ xml | json | csv ]
+# This variable has effect only when audit_log_handler is set to 'file'.
+--audit_log_format=xml
+# This variable can be used to specify the comma-seperated list of Elasticsearch addresses,
+# eg, '192.168.0.1:7001, 192.168.0.2:7001'.
+# This variable has effect only when audit_log_handler is set to 'es'.
+--audit_log_es_address=
+# This variable can be used to specify the user name of the Elasticsearch.
+# This variable has effect only when audit_log_handler is set to 'es'.
+--audit_log_es_user=
+# This variable can be used to specify the user password of the Elasticsearch.
+# This variable has effect only when audit_log_handler is set to 'es'.
+--audit_log_es_password=
+# This variable can be used to specify the number of logs which are sent to Elasticsearch at one time.
+# This variable has effect only when audit_log_handler is set to 'es'.
+--audit_log_es_batch_size=1000
+# This variable is used to specify the list of spaces for not tracking.
+# The value can be comma separated list of spaces, ie, 'nba, basketball'.
+--audit_log_exclude_spaces=
+# This variable is used to specify the list of log categories for tracking, eg, 'login, ddl'.
+# There are eight categories for tracking. There are: [ login ｜ exit | ddl | dql | dml | dcl | util | unknown ].
+--audit_log_categories=login,exit
+
 ########## metrics ##########
 --enable_space_level_metrics=false
 
@@ -94,14 +141,15 @@
 # if use experimental features
 --enable_experimental_feature=false
 
-# if use balance data feature, only work if enable_experimental_feature is true
---enable_data_balance=true
-
-# enable udf, written in c++ only for now
---enable_udf=true
-
-# set the directory where the .so files of udf are stored, when enable_udf is true
---udf_path=/home/nebula/dev/nebula/udf/
+########## Black box ########
+# Enable black box
+--ng_black_box_switch=true
+# Black box log folder
+--ng_black_box_home=black_box
+# Black box dump metrics log period
+--ng_black_box_dump_period_seconds=5
+# Black box log files expire time
+--ng_black_box_file_lifetime_seconds=1800
 
 ########## session ##########
 # Maximum number of sessions that can be created per IP and per user
@@ -122,13 +170,3 @@
 --memory_purge_enabled=true
 # memory background purge interval in seconds
 --memory_purge_interval_seconds=10
-
-########## performance optimization ##########
-# The max job size in multi job mode
---max_job_size=1
-# The min batch size for handling dataset in multi job mode, only enabled when max_job_size is greater than 1
---min_batch_size=8192
-# if true, return directly without go through RPC
---optimize_appendvertices=false
-# number of paths constructed by each thread
---path_batch_size=10000
