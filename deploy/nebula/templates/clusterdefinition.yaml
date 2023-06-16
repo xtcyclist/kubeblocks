@@ -18,7 +18,7 @@ spec:
       configSpecs:
         - name: nebula-metad-config
           templateRef: nebula-metad-config-template
-          volumeName: conf
+          volumeName: nebula-metad
       scriptSpecs:
         - name: nebula-metad-scripts
           templateRef: nebula-metad-scripts-template
@@ -26,30 +26,14 @@ spec:
           defaultMode: 493
       workloadType: Stateful
       characterType: nebula-metad
-      service:
-        ports:
-          - name: tcp-metad
-            port: 9559
-            targetPort: tcp-metad
-      volumeTypes:
-        - name: data
-          type: data
+      # service:
+      #   ports:
+      #     - name: tcp-metad
+      #       port: 9559
+      #       targetPort: tcp-metad
       podSpec:
-        securityContext:
-          fsGroup: 1001
-        dnsPolicy: ClusterFirst
-        enableServiceLinks: true
         containers:
           - name: nebula-metad
-            volumeMounts:
-              - name: data
-                mountPath: /data
-              - name: log
-                mountPath: /log
-              - name: conf
-                mountPath: /conf
-              - name: scripts
-                mountPath: /scripts
             command:
               - /bin/bash
               - -c
@@ -57,53 +41,38 @@ spec:
                 set -ex
                 /scripts/nebula-metad-start.sh
             imagePullPolicy: {{default .Values.nebula.metad.image.pullPolicy "IfNotPresent"}}
-            securityContext:
-              runAsUser: 0
-            livenessProbe:
+            ports:
+            - containerPort: 9559
+              name: thrift
+              protocol: TCP
+            - containerPort: 19559
+              name: http
+              protocol: TCP
+            - containerPort: 19560
+              name: http2
+              protocol: TCP
+            readinessProbe:
               failureThreshold: 3
               httpGet:
-                path: /healthz
-                port: 9091
+                path: /status
+                port: 19559
                 scheme: HTTP
-              periodSeconds: 15
-              successThreshold: 1
-              timeoutSeconds: 10
-            readinessProbe:
-              failureThreshold: 2
-              httpGet:
-                path: /healthz
-                port: 9091
-                scheme: HTTP
-              initialDelaySeconds: 5
-              periodSeconds: 15
-              successThreshold: 1
-              timeoutSeconds: 3
-            startupProbe:
-              failureThreshold: 18
-              httpGet:
-                path: /healthz
-                port: 9091
-                scheme: HTTP
+              initialDelaySeconds: 10
               periodSeconds: 10
               successThreshold: 1
-              timeoutSeconds: 3
-            ports:
-              - name: tcp-metad
-                containerPort: 9559
-              - name: tcp-metrics
-                containerPort: 9091
-            args:
-            env:
-              - name: CACHE_SIZE
-                valueFrom:
-                  resourceFieldRef:
-                    divisor: 1Gi
-                    resource: limits.memory
-        serviceAccountName: default
-        terminationGracePeriodSeconds: 300
+              timeoutSeconds: 5
+            volumeMounts:
+              - name: scripts
+                mountPath: /scripts
+              - mountPath: /usr/local/nebula/data
+                name: data
+              - mountPath: /usr/local/nebula/logs
+                name: logs
+              - mountPath: /usr/local/nebula/etc
+                name: nebula-metad
         volumes:
           - emptyDir: {}
-            name: log
+            name: logs
     - name: nebula-storaged
       configSpecs:
         - name: nebula-storaged-config
