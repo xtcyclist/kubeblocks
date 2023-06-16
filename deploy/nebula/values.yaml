@@ -44,7 +44,7 @@ nebula:
       tag: v3.5.0
       pullPolicy: IfNotPresent
     version: v3.5.0
-    replicas: 3
+    replicas: 1
     env: []
     config: {}
     resources:

@@ -3,6 +3,7 @@
 --daemonize=true
 # The file to host the process id
 --pid_file=pids/nebula-metad.pid
+--license_path=nebula.license
 
 ########## logging ##########
 # The directory to host logging files
@@ -43,11 +44,23 @@
 # Root data path, here should be only single path for metad
 --data_path=data/meta
 
+# !!! Minimum reserved bytes of data path
+--minimum_reserved_bytes=268435456
 ########## Misc #########
 # The default number of parts when a space is created
---default_parts_num=100
+--default_parts_num=10
 # The default replica factor when a space is created
 --default_replica_factor=1
 
 --heartbeat_interval_secs=10
 --agent_heartbeat_interval_secs=60
+
+########## Black box ########
+# Enable black box
+--ng_black_box_switch=true
+# Black box log folder
+--ng_black_box_home=black_box
+# Black box dump metrics log period
+--ng_black_box_dump_period_seconds=5
+# Black box log files expire time
+--ng_black_box_file_lifetime_seconds=1800
